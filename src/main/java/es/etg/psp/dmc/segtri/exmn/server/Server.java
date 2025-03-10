@@ -1,4 +1,4 @@
-package es.etg.psp.dmc.segtri.exmn;
+package es.etg.psp.dmc.segtri.exmn.server;
 
 import java.net.ServerSocket;
 

@@ -1,4 +1,4 @@
-package es.etg.psp.dmc.segtri.exmn;
+package es.etg.psp.dmc.segtri.exmn.client;
 
 import java.net.Socket;
 import java.util.Scanner;
@@ -12,8 +12,11 @@ public class Cliente implements DataTransferTCP, PortData{
         try (Socket cliente = new Socket(LOCALHOST, PORT);
         Scanner sc = new Scanner(System.in)){
             while (true) { 
+                System.out.print("> ");
                 DataTransferTCP.send(cliente, sc.nextInt());
+                System.out.print("> ");
                 DataTransferTCP.send(cliente, sc.next());
+                System.out.print("> ");
                 DataTransferTCP.send(cliente, sc.nextInt());
 
                 System.out.println(DataTransferTCP.receiveStr(cliente));
