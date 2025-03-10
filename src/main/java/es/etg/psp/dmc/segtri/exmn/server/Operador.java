@@ -6,6 +6,7 @@ import es.etg.psp.dmc.segtri.exmn.util.DataTransferTCP;
 import es.etg.psp.dmc.segtri.exmn.util.Log;
 
 public class Operador implements Runnable, DataTransferTCP, Log{
+    private static final String CERO_PARTIDO_CERO = "0/0";
     private static final String FALLO_AL_INTRODUCIR_LOS_DATOS = "FALLO AL INTRODUCIR LOS DATOS";
     private static final String SALTO_DE_LINEA = "\n";
     private static final String OPERACIONES_COMPLEJAS = " OPERACIONES COMPLEJAS -> ";
@@ -18,7 +19,7 @@ public class Operador implements Runnable, DataTransferTCP, Log{
     private static final String RESTA = "-";
     private static final String SUMA = "+";
     private static final String SERVER = "SERVER: ";
-    private static final String FALLO = "DEBES INTRODUCIR LOS DATOS SEGÚN MARQUE EL PROTOCOLO";
+    private static final String FALLO = "DEBES INTRODUCIR LOS DATOS SEGÚN MARQUE EL PROTOCOLO, QUIZÁ LOS DATOS INTRODUCIDOS NO SEAN DEL TODO VÁLIDOS";
 
     private Socket cliente;
 
@@ -38,7 +39,7 @@ public class Operador implements Runnable, DataTransferTCP, Log{
                 String operador = DataTransferTCP.receiveStr(cliente);
                 int segundoComando = DataTransferTCP.receiveInt(cliente);
 
-                if (comprobarComando(operador)){
+                if (comprobarComando(operador) && !(primerComando + operador + segundoComando).equals(CERO_PARTIDO_CERO)){
                     int resultado = calcular(primerComando, segundoComando, operador);
                     DataTransferTCP.send(cliente, SERVER + SALTO_DE_LINEA + RESULTADO + Integer.toString(resultado) + SALTO_DE_LINEA + OPERACIONES_SENCILLAS + Integer.toString(getContadorSencilla()) + SALTO_DE_LINEA + OPERACIONES_COMPLEJAS + Integer.toString(getContadorCompleja()));
                 } else {
@@ -47,7 +48,7 @@ public class Operador implements Runnable, DataTransferTCP, Log{
                 }
             }
         } catch (Exception e) {
-            
+            throw new RuntimeException(e);
         }        
     }
 
