@@ -12,9 +12,8 @@ El protocolo será el siguiente:
 Una vez el cliente haya seguido este protocolo(primero número, luego operador y por último número), pudiendo sustituir 1 y 4 por cualquier otro número entero sin superar el límite que marca INT como unidad de medida, el servidor responderá al cliente de la siguiente forma:
 ```
 SERVER:
-RESULTADO -> 4
- OPERACIONES SENCILLAS -> 0
- OPERACIONES COMPLEJAS -> 1
+ RESULTADO -> 4
+ GASTOS: 10 CÉNTIMOS
 ```
 Recalcar que las operaciones sencillas sumarán si se realiza una operacion con "+" o "-" y las complejas si se reliza con "*" o "/".
 

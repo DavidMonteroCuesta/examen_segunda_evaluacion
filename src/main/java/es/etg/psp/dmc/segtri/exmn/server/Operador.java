@@ -6,12 +6,17 @@ import es.etg.psp.dmc.segtri.exmn.util.DataTransferTCP;
 import es.etg.psp.dmc.segtri.exmn.util.Log;
 
 public class Operador implements Runnable, DataTransferTCP, Log{
+    private static final int VALOR_NUM_NULO = 0;
+    private static final int GASTO_SENCILLA = 5;
+    private static final int GASTO_COMPLEJA = 10;
+    private static final String GASTOS = " GASTOS: ";
+    private static final String CENTIMOS = " CÉNTIMOS";
     private static final String CERO_PARTIDO_CERO = "0/0";
     private static final String FALLO_AL_INTRODUCIR_LOS_DATOS = "FALLO AL INTRODUCIR LOS DATOS";
     private static final String SALTO_DE_LINEA = "\n";
     private static final String OPERACIONES_COMPLEJAS = " OPERACIONES COMPLEJAS -> ";
     private static final String OPERACIONES_SENCILLAS = " OPERACIONES SENCILLAS -> ";
-    private static final String RESULTADO = "RESULTADO -> ";
+    private static final String RESULTADO = " RESULTADO -> ";
     private static final String OPERACION_DE = "OPERACIÓN -> ";
     private static final String CON_RESULTADO = " CON RESULTADO -> ";
     private static final String DIVI = "/";
@@ -27,8 +32,8 @@ public class Operador implements Runnable, DataTransferTCP, Log{
     private int contadorCompleja;
     public Operador(Socket cliente) {
         this.cliente = cliente;
-        contadorCompleja = 0;
-        contadorSencilla = 0;
+        contadorCompleja = VALOR_NUM_NULO;
+        contadorSencilla = VALOR_NUM_NULO;
     }
 
     @Override
@@ -41,7 +46,10 @@ public class Operador implements Runnable, DataTransferTCP, Log{
 
                 if (comprobarComando(operador) && !(primerComando + operador + segundoComando).equals(CERO_PARTIDO_CERO)){
                     int resultado = calcular(primerComando, segundoComando, operador);
-                    DataTransferTCP.send(cliente, SERVER + SALTO_DE_LINEA + RESULTADO + Integer.toString(resultado) + SALTO_DE_LINEA + OPERACIONES_SENCILLAS + Integer.toString(getContadorSencilla()) + SALTO_DE_LINEA + OPERACIONES_COMPLEJAS + Integer.toString(getContadorCompleja()));
+                    String respuesta = RESULTADO + Integer.toString(resultado) + SALTO_DE_LINEA + OPERACIONES_SENCILLAS + Integer.toString(getContadorSencilla()) + SALTO_DE_LINEA + OPERACIONES_COMPLEJAS + Integer.toString(getContadorCompleja());
+                    System.out.println(this.cliente.getInetAddress().getHostName() + SALTO_DE_LINEA + respuesta);
+                    //Lo siento por el sout System.out.println aquí, son las prisas
+                    DataTransferTCP.send(cliente, SERVER + SALTO_DE_LINEA + RESULTADO + Integer.toString(resultado) + SALTO_DE_LINEA + GASTOS + ((contadorCompleja * GASTO_COMPLEJA) + (contadorSencilla * GASTO_SENCILLA)) + CENTIMOS);
                 } else {
                     DataTransferTCP.send(cliente, SERVER + FALLO);
                     Log.log(FALLO_AL_INTRODUCIR_LOS_DATOS, this.cliente.getInetAddress().getHostName());
